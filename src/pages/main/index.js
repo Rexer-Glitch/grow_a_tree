@@ -9,7 +9,7 @@ import Header from "../../components/header";
 import Problems from "../../components/problems";
 import { useState } from "react";
 
-function Age({ state: { age, setAge } }) {
+function Age({ state: { age, setAge }, handleEnter }) {
   return (
     <InnerContainer>
       <TextBefore>Our Baby is</TextBefore>
@@ -20,22 +20,30 @@ function Age({ state: { age, setAge } }) {
         defaultValue={1}
         value={age}
         onChange={({ target }) => setAge(target.value)}
+        onKeyDown={({ key }) => key === "Enter" && handleEnter()}
       />
       <TextAfter>Days Old</TextAfter>
     </InnerContainer>
   );
 }
 
-function Weight({state: {weight, setWeight}}) {
+function Weight({ state: { weight, setWeight }, handleEnter }) {
   return (
     <InnerContainer>
       <TextBefore>They Weighed</TextBefore>
-      <Textbox type="number" min="650" max="6000" defaultValue={650} value={weight} onChange={({target})=> setWeight(target.value)}/>
+      <Textbox
+        type="number"
+        min="650"
+        max="6000"
+        defaultValue={650}
+        value={weight}
+        onChange={({ target }) => setWeight(target.value)}
+        onKeyDown={({ key }) => key === "Enter" && handleEnter()}
+      />
       <TextAfter>Grams at Birth</TextAfter>
     </InnerContainer>
   );
 }
-
 
 function Main() {
   const [stage, setStage] = useState({
@@ -80,9 +88,11 @@ function Main() {
         handleBackClick={handleBackClick}
         handleForwardClick={handleForwardClick}
       />
-      {stage.stage1 && <Age state={{ age, setAge }} />}
-      {stage.stage2 && <Weight state={{ weight, setWeight }} />}
-      {stage.stage3 && <Problems age={age} weight={weight}/>}
+      {stage.stage1 && (
+        <Age state={{ age, setAge }} handleEnter={handleForwardClick} />
+      )}
+      {stage.stage2 && <Weight state={{ weight, setWeight }} handleEnter={handleForwardClick} />}
+      {stage.stage3 && <Problems age={age} weight={weight} />}
     </Container>
   );
 }
